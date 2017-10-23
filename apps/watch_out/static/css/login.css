@@ -1,0 +1,60 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+#container{
+  width: 100%;
+  background: #F0F0F0;
+}
+body {
+  height: 100%;
+ 
+}
+.navbar {
+    background-color: black;
+    border-color: #E7E7E7;
+    width: 100%;
+
+}
+.nav-link {
+  margin: none;
+
+}
+
+.btn1 {
+  background: #F9D63D;
+  font-weight: bolder;
+  float: right;
+  color: gray;
+}
+
+#content{
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #F0F0F0;
+  margin-bottom: -20px;
+  padding-top: 50px;
+}
+#inputEmail3 {
+  width: 200px;
+  margin-left: 30px;
+}
+#inputPassword3 {
+  width: 200px;
+  margin-left: 30px;
+}
+
+#login {
+  border: 3px #8F8D8D solid;
+  width: 350px;
+  text-align: center;
+  padding: 25px 30px 45px 30px;
+
+}
+
+.btn2 {
+  background: #F9D63D;
+  font-weight: bolder;
+  color: gray;
+}

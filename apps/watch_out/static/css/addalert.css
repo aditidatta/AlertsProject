@@ -1,0 +1,57 @@
+*{
+  margin: 0px;
+  padding: 0px;
+}
+
+#container{
+  width: 970px;
+  margin: 0px auto;
+}
+#header {
+  background: url("http://twitrheaders.com/wp-content/uploads/2014/05/Crime-scene-yellow-tape.png");
+  background-size: 100% 300px;
+  height: 150px;
+  display: block;
+  margin-bottom: -20px;
+}
+
+#content{
+  width: 970px;
+  height: 565px;
+  display: block;
+  background: #F0F0F0;
+  margin-bottom: -20px;
+  padding-left: 10px;
+}
+h1{
+  text-align: center;
+}
+h3{
+  text-align: center;
+}
+.txt1{
+  width: 300px;
+}
+.drop1{
+  width: 300px;
+}
+.description{
+  width: 300px;
+}
+.btn1 {
+  background: #F9D63D;
+  font-weight: bolder;
+  color: gray;
+}
+
+.btn2 {
+  background: #F9D63D;
+  font-weight: bolder;
+  float: right;
+  color: gray;
+}
+.btn3 {
+  background: #F9D63D;
+  font-weight: bolder;
+  color: gray;
+}

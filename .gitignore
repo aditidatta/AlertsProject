@@ -1,0 +1,5 @@
+*.pyc
+readme.txt
+example
+.DS_Store
+ djangoEnv

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Add Alert!</title>
+    <meta charset="urf-8">
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/img/crimheader.jpg' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/addalert.css' %}">
+
+      <script>
+
+        $( document ).ready(function() {
+          console.log( "document loaded" );
+
+          $('#alertform').on('submit', function(e) {
+            //call this function
+            e.preventDefault();
+            console.log('called')
+            var geocoder = new google.maps.Geocoder();
+            var address = document.getElementById('address').value;
+            geocoder.geocode({'address': address}, function(results, status) {
+              if (status === 'OK') {
+                //console.log(results[0].geometry.location)
+                var loclat = results[0].geometry.location.lat();
+                var loclng = results[0].geometry.location.lng();
+                //alert('loclat')
+                //document.getElementById('lat').value = loclat;
+                //document.getElementById('lng').value = loclng;
+                //$('#lat').val(loclat.toString());
+                //$('#lng').val(loclng);
+                $('#lat').attr('value', ''+loclat);
+                $('#lng').attr('value', ''+loclng);
+                alert(document.getElementById('lng').value)
+                var passdata = $('#alertform').serializeArray();
+                console.log(passdata);
+              } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+              }
+            });
+            /*console.log(loclat, loclng);
+            var passdata = $('#alertform').serializeArray();
+            passdata.push({name: 'lat', value:  'loclat'},{name: 'lng', value: 'loclng'});
+            alert("done with push");
+            $.post($(this).attr('action'), passdata, function(res) {
+              console.log("going to write stuff");
+            }, 'json');*/
+            this.submit();
+          });
+        });
+      </script>
+  </head>
+  <body>
+    <div id="container">
+      <div id="header">
+        <a href="/"><button class="btn btn-default btn1">Return to main page</button></a>
+        <a href="/login"><button type="button" class="btn btn-default btn2">Login</button></a>
+        <a href="/registration"><button type="button" class="btn btn-default btn2">Register</button></a>
+      </div>
+      <div id="content">
+        <h1>Watchout!</h1>
+        <h3>Crime activity monitor near your location!</h3>
+        <form id="alertform" action="/addalert/process" method="post">
+          {% csrf_token %}
+          <p>Location: </p>
+          <input class="form-control txt1" id="address" type="text" name="address" placeholder="Location"><br>
+          <input class="form-control txt1" type="date" name="date">
+          <input id="lng" name="lng" type="hidden"  value=""  />
+          <input id="lat" name="lat" type="hidden"  value="" />
+          <br>
+          <p>Crime Type: </p>
+          <select class="form-control drop1" name="type">
+            <option value="arrest">Arrest</option>
+            <option value="arson">Arson</option>
+            <option value="assult">Assult</option>
+            <option value="burglary">Burglary</option>
+            <option value="robbery">Robbery</option>
+            <option value="shooting">Shooting</option>
+            <option value="theft">Theft</option>
+            <option value="vandalism">Vandalism</option>
+            <option value="others">Others</option>
+          </select>
+          <br>
+          <p>Description: </p>
+          <textarea class="form-control description" rows="3" name="description" placeholder="Please describe the incident" rows="5" cols="75"></textarea><br>
+          <input class="btn btn-default btn3" type="submit" value="Add Alert">
+        </form>
+      </div>
+      <div id="map" style=" width: 820px; height: 500px;"></div>
+
+      <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCm0CIWG6AZ7uLfzCSDNxL7PueiTOTNCF4">
+      </script>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>

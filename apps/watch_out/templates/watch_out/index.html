@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Watch Out!</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/index.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 400px;
+        width: 80%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+    </style>
+    <script>
+          $(document).ready(function(){
+            console.log("start");
+            $('form').submit(function() {
+              deleteMarkers();
+              console.log("submit");
+
+              console.log("this to test global variable"+ loclat + loclng);
+              var passdata = $('#thisform').serializeArray();
+              console.log(passdata);
+              console.log("ready to push");
+              passdata.push({name: 'lat', value:  loclat},{name: 'lng', value: loclng});
+              console.log("done with push");
+              console.log(passdata);
+
+              $.post($(this).attr('action'), passdata, function(res) {
+                //var crimes = res.crimes;
+                console.log(res.crimes);
+                for(var key in res.crimes){
+                  for(var i = 0; i < 20; i++){
+                    if(i >= res.crimes[key].length){
+                      break;
+                    }
+                    var type = res.crimes[key][i].type;
+                    var date = res.crimes[key][i].date;
+                    var address = res.crimes[key][i].address;
+                    var link = res.crimes[key][i].link;
+                    var latlng = new google.maps.LatLng(res.crimes[key][i].lat, res.crimes[key][i].lon);
+                    addmarker(latlng, type, date, address, link);
+                  }
+                }
+                /*for(i=0; i<20; i++) {
+                  console.log("object #:"+i);
+                  var type = res.crimes[i].type;
+                  var date = res.crimes[i].date;
+                  var address = res.crimes[i].address;
+                  var link = res.crimes[i].link;
+                  var latlng = new google.maps.LatLng(res.crimes[i].lat, res.crimes[i].lon);
+                  addmarker(latlng, type, date, address, link);
+
+                }*/
+                console.log("end of for loop");
+                // var latlng = new google.maps.LatLng(res.crimes[i].lon,res.crimes[i].lat);
+                // addmarker(latlng)
+              }, 'json');
+            // don't forget, without it the page will refresh
+              return false;
+              console.log(markers);
+            });
+
+            //console.log(res);
+
+          });
+
+          var map;
+          var markers=[];
+          function initMap() {
+            var initcenter = new google.maps.LatLng(37.3, -122);
+            map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 12,
+              center: initcenter
+            });
+            var geocoder = new google.maps.Geocoder();
+
+            document.getElementById("geo").addEventListener('click', function() {
+            //call this function
+              geocodeAddress(geocoder, map);
+            });
+          }
+
+
+        function addmarker(latilongi, type, date, address, link) {
+          console.log("adding new marker");
+          var marker = new google.maps.Marker({
+              position: latilongi,
+              map: map,
+              title: 'new marker',
+          });
+          contentStr= '<h5>'+ type +' </h5>' + '<p>'+ date +' </p>'+ '<p>'+ address +' </p>' + '<a href="'+ link+'">Learn More</a>'
+          var infowindow = new google.maps.InfoWindow({
+            content: contentStr
+
+          });
+          markers.push(marker);
+          console.log("I should have a new marker");
+          marker.addListener('mouseover', function() {
+           infowindow.open(map, marker);
+          });
+          marker.addListener('click', function() {
+          infowindow.close();
+          });
+        }
+
+        // Shows any markers currently in the array.
+        function showMarkers() {
+          setMapOnAll(map);
+        }
+        function clearMarkers() {
+        setMapOnAll(null);
+        }
+        function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+        }
+      }
+        // Deletes all markers in the array by removing references to them.
+        function deleteMarkers() {
+          clearMarkers();
+          markers = [];
+        }
+          //not workingggggg
+        var loclat;
+        var loclng;
+        function geocodeAddress(geocoder, resultsMap) {
+          var address = document.getElementById('address').value;
+          geocoder.geocode({'address': address}, function(results, status) {
+            if (status === 'OK') {
+              resultsMap.setCenter(results[0].geometry.location);
+              console.log(results.map);
+              console.log(results[0].geometry.location)
+              var marker = new google.maps.Marker({
+                map: resultsMap,
+                position: results[0].geometry.location
+              });
+              loclat = results[0].geometry.location.lat();
+              loclng = results[0].geometry.location.lng();
+              console.log(loclat, loclng);
+            } else {
+              alert('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        }
+
+    </script>
+
+
+  </head>
+  <body>
+
+    <div id="container">
+
+    <nav class="navbar navbar-light bg-faded" >
+  <a class="navbar-brand" href="#"> </img></a>
+  <ul class="nav navbar-nav" >
+    <li class="nav-item">
+      <a class="nav-link" href="/crimes">Home <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/">About <span class="sr-only">(current)</span></a>
+    </li>
+  </ul>
+  <ul class="nav navbar-nav pull-right" >
+    <li class="nav-item">
+      <a class="nav-link" href="/login">Login <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/registration">Register</a>
+    </li>
+
+
+
+       <!-- <a href="/login"><button type="button" class="btn btn-default btn2">Login</button></a>
+      <a href="/registration"><button type="button" class="btn btn-default btn2">Register</button></a>
+      </div> !-->
+    </li>
+  </ul>
+
+</nav>
+
+<center>
+
+
+    <div id="content">
+      <div id="contento">
+        <img src = "http://68.media.tumblr.com/20ce0cf7d560449aa3df54df80e5561f/tumblr_oh3lw33rRJ1vhj3imo1_1280.png" height = "30px" margin = "30px"></img>
+
+      <!--
+      <h1>Watchout</h1>
+      <h3>Check out the crime rate for the area</h3>
+      !-->
+      <form id="thisform" action="/submitform" method="post">
+        {% csrf_token %}
+        <div id = "formula">
+        <input id="address" name="address" class="form-control txt1" type="textbox" placeholder="address">
+        <input id="geo" class="btn btn-default btn3" type="button" value="Geocode">
+        <input id="radius" name="radius" class="form-control txt2" type="text" placeholder="0.05">
+        <input id="checkcrime" class="btn btn-default btn3" type="submit" value="Check Crime">
+      </form><br>
+      <br>
+      </div>
+      <div id="map" style=" width: 820px; height: 500px;"></div>
+
+      <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCm0CIWG6AZ7uLfzCSDNxL7PueiTOTNCF4&callback=initMap">
+      </script>
+      </div>
+    </div>
+
+    <hr>
+
+    <div id="footer">
+      <h4 id="suspicious" >See something suspicious? Add an alert!</h4>
+      <a id="addalert" href="/addalert"><button class="btn btn-default btn3 center-block">Add an alert!</button></a>
+    </div>
+
+
+
+
+
+
+</center>
+  </body>
+</html>

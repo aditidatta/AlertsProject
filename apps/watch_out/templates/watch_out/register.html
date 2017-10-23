@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Regiration</title>
+      {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/register.css' %}">
+  </head>
+  <body>
+    <center>
+     <div id="container">
+
+    <nav class="navbar navbar-light bg-faded" >
+  <a class="navbar-brand" href="#"> </img></a>
+  <ul class="nav navbar-nav" >
+    <li class="nav-item">
+      <a class="nav-link" href="/crimes">Home <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/">About <span class="sr-only">(current)</span></a>
+    </li>
+  </ul>
+  <ul class="nav navbar-nav pull-right" >
+    <li class="nav-item">
+      <a class="nav-link" href="/login">Login <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/registration">Register</a>
+    </li>
+
+    
+  
+       <!-- <a href="/login"><button type="button" class="btn btn-default btn2">Login</button></a>
+      <a href="/registration"><button type="button" class="btn btn-default btn2">Register</button></a>
+      </div> !-->
+    </li>
+  </ul>
+  
+</nav>
+
+<center>
+
+
+   
+        <img src = "http://68.media.tumblr.com/20ce0cf7d560449aa3df54df80e5561f/tumblr_oh3lw33rRJ1vhj3imo1_1280.png" height = "30px" margin = "30px"></img>
+</div>
+
+      <div id="content">
+        <div id="flash">
+          {% if messages %}
+            {% for message in messages%}
+              <ul>{{message}}</ul>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        <div id="register" class="container">
+          <h2>Join Today!!</h2>
+          <h3>Register</h3><br>
+          <form action='/registration/process' method='POST'>
+            {% csrf_token %}
+            <p>Name: <input class="form-control form1" type='text' name='name'></p>
+            <p>Email:<input class="form-control form1" type="text" name="email"></p>
+            <p>Password: <input class="form-control form1" type='password' name='password'></p>
+            <p>Confirm Password: <input class="form-control form1" type='password' name='re_password'></p>
+            <input class="btn btn-default btn2" type="submit" value="Register">
+          </form>
+        </div>
+      </div>
+  </div>
+  </center>
+  </body>
+</html>
